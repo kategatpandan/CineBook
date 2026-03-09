@@ -22,6 +22,11 @@ if (!isset($_SESSION['user_id'])) {
 <title>CineBook - Mobile Cinema Booking</title>
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.1/css/all.css">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="manifest" href="/manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CineBook">
+<meta name="theme-color" content="#ff8c42">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -5963,6 +5968,22 @@ function testMovieAPI() {
         }
     });
 }
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js').then(function(registration) {
+      console.log('ServiceWorker registered successfully');
+    }).catch(function(err) {
+      console.log('ServiceWorker registration failed: ', err);
+    });
+  });
+}
+
+// Detect if app is running in standalone mode (installed)
+if (window.matchMedia('(display-mode: standalone)').matches) {
+  console.log('CineBook is running in standalone mode - no browser UI');
+}
+</script>
 </script>
 </body>
 </html>
