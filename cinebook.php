@@ -5984,6 +5984,5 @@ if (window.matchMedia('(display-mode: standalone)').matches) {
   console.log('CineBook is running in standalone mode - no browser UI');
 }
 </script>
-</script>
 </body>
 </html>
