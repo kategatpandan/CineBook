@@ -6012,7 +6012,7 @@ window.matchMedia('(display-mode: standalone)').addEventListener('change', (evt)
   }
 });
 
-// Check if page is loaded from home screen
+// Check if page is loaded from home screen (iOS)
 if (window.navigator.standalone === true) {
   console.log('📱 Running in standalone mode (iOS)');
   document.body.classList.add('pwa-mode');
