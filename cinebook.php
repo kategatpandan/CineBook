@@ -27,6 +27,8 @@ if (!isset($_SESSION['user_id'])) {
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="CineBook">
 <meta name="theme-color" content="#ff8c42">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="CineBook">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -5983,6 +5985,39 @@ if ('serviceWorker' in navigator) {
 if (window.matchMedia('(display-mode: standalone)').matches) {
   console.log('CineBook is running in standalone mode - no browser UI');
 }
+<script>
+// ===== PWA INSTALLATION DETECTION =====
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js').then(function(registration) {
+      console.log('✅ ServiceWorker registered successfully');
+      
+      // Check if already installed
+      if (window.matchMedia('(display-mode: standalone)').matches) {
+        console.log('📱 CineBook is running in standalone mode - no browser UI');
+        document.body.classList.add('pwa-mode');
+      }
+      
+    }).catch(function(err) {
+      console.log('❌ ServiceWorker registration failed: ', err);
+    });
+  });
+}
+
+// Listen for display mode changes
+window.matchMedia('(display-mode: standalone)').addEventListener('change', (evt) => {
+  if (evt.matches) {
+    console.log('📱 Now running in standalone mode');
+    document.body.classList.add('pwa-mode');
+  }
+});
+
+// Check if page is loaded from home screen
+if (window.navigator.standalone === true) {
+  console.log('📱 Running in standalone mode (iOS)');
+  document.body.classList.add('pwa-mode');
+}
 </script>
+
 </body>
 </html>
