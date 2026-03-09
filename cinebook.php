@@ -5970,23 +5970,8 @@ function testMovieAPI() {
         }
     });
 }
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('/sw.js').then(function(registration) {
-      console.log('ServiceWorker registered successfully');
-    }).catch(function(err) {
-      console.log('ServiceWorker registration failed: ', err);
-    });
-  });
-}
 
-// Detect if app is running in standalone mode (installed)
-if (window.matchMedia('(display-mode: standalone)').matches) {
-  console.log('CineBook is running in standalone mode - no browser UI');
-}
-<script>
-// ===== PWA INSTALLATION DETECTION =====
+// ===== PWA INSTALLATION DETECTION (SINGLE SCRIPT) =====
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
     navigator.serviceWorker.register('/sw.js').then(function(registration) {
