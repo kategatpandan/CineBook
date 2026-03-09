@@ -1,21 +1,25 @@
 {
-  "name": "CineBook",
+  "name": "CineBook - Mobile Cinema Booking",
   "short_name": "CineBook",
-  "description": "Mobile Cinema Booking",
+  "description": "Book movie tickets easily from your phone",
   "start_url": "/cinebook.php",
   "display": "standalone",
-  "background_color": "#0a0a0f",
+  "display_override": ["standalone", "fullscreen"],
+  "orientation": "portrait",
   "theme_color": "#ff8c42",
+  "background_color": "#0a0a0f",
   "icons": [
     {
       "src": "/new-logo.jpg",
       "sizes": "192x192",
-      "type": "image/jpg"
+      "type": "image/jpg",
+      "purpose": "any maskable"
     },
     {
       "src": "/new-logo.jpg",
       "sizes": "512x512",
-      "type": "image/jpg"
+      "type": "image/jpg",
+      "purpose": "any maskable"
     }
   ]
 }
