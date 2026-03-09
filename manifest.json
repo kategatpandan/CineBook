@@ -1,0 +1,21 @@
+{
+  "name": "CineBook",
+  "short_name": "CineBook",
+  "description": "Mobile Cinema Booking",
+  "start_url": "/cinebook.php",
+  "display": "standalone",
+  "background_color": "#0a0a0f",
+  "theme_color": "#ff8c42",
+  "icons": [
+    {
+      "src": "/new-logo.jpg",
+      "sizes": "192x192",
+      "type": "image/jpg"
+    },
+    {
+      "src": "/new-logo.jpg",
+      "sizes": "512x512",
+      "type": "image/jpg"
+    }
+  ]
+}
