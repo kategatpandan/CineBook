@@ -3172,6 +3172,14 @@ let userRedeemedPromos = {};
 let userBookings = [];
 let occupiedSeatsData = {};
 
+// ===== DEBUG CONSOLE LOGS =====
+console.log('🚀 CineBook app loaded');
+console.log('📦 jQuery version:', $.fn.jquery);
+console.log('💰 User points:', userPoints);
+console.log('🔑 Is logged in:', isLoggedIn);
+console.log('📱 Screen width:', window.innerWidth);
+console.log('🌐 Current URL:', window.location.href);
+    
 // Movie trailer data (keep this as is)
 const movieTrailers = [
     {
@@ -4317,6 +4325,8 @@ function handleLogin(e) {
     
     loginError.hide().text('');
     
+    console.log('Attempting login with:', username); // Debug log
+    
     $.ajax({
         url: 'api.php?action=login',
         type: 'POST',
@@ -4325,20 +4335,24 @@ function handleLogin(e) {
             password: password
         }),
         contentType: 'application/json',
+        dataType: 'json',
         success: function(response) {
-            if (response.success) {
+            console.log('Login response:', response); // Debug log
+            if (response && response.success) {
                 isLoggedIn = true;
                 userPoints = response.points;
                 $('#userPoints').text(response.points);
                 showToast('Login successful!', 'success');
                 setTimeout(function() {
-                    location.reload(); // Reload to get session data
+                    location.reload();
                 }, 500);
             } else {
                 loginError.text(response.message || 'Invalid username or password').show();
             }
         },
-        error: function() {
+        error: function(xhr, status, error) {
+            console.error('Login error:', error); // Debug log
+            console.error('Response:', xhr.responseText); // Debug log
             loginError.text('Login failed. Please try again.').show();
         }
     });
