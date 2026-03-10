@@ -11,16 +11,17 @@ $username = getenv('DB_USER') ?: 'root';
 $password = getenv('DB_PASSWORD') ?: '';
 
 try {
-    // For TiDB Cloud (requires SSL)
+    // For TiDB Cloud (requires SSL) - simplified version
+    $dsn = "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4";
+    
+    // Basic options without the problematic SSL constants
     $options = [
-        PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false,
-        PDO::MYSQL_ATTR_SSL_CA => null,
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         PDO::ATTR_EMULATE_PREPARES => false
     ];
     
-    $dsn = "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4";
+    // Try to connect - TiDB Cloud will handle SSL automatically
     $pdo = new PDO($dsn, $username, $password, $options);
     
     // Create tables if they don't exist
@@ -28,6 +29,8 @@ try {
     
 } catch(PDOException $e) {
     error_log("Database connection failed: " . $e->getMessage());
+    
+    // Return a clean JSON error message
     echo json_encode(['error' => 'Database connection failed: ' . $e->getMessage()]);
     exit;
 }
