@@ -3,19 +3,31 @@
 header('Content-Type: application/json');
 session_start();
 
-$host = 'localhost';
-$dbname = 'cinebook_mobiledb';
-$username = 'root';
-$password = '';
+// Use environment variables if available, otherwise fallback to localhost
+$host = getenv('DB_HOST') ?: 'localhost';
+$port = getenv('DB_PORT') ?: '3306';
+$dbname = getenv('DB_NAME') ?: 'cinebook_mobiledb';
+$username = getenv('DB_USER') ?: 'root';
+$password = getenv('DB_PASSWORD') ?: '';
 
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    // For TiDB Cloud (requires SSL)
+    $options = [
+        PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false,
+        PDO::MYSQL_ATTR_SSL_CA => null,
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES => false
+    ];
+    
+    $dsn = "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4";
+    $pdo = new PDO($dsn, $username, $password, $options);
     
     // Create tables if they don't exist
     createTables($pdo);
     
 } catch(PDOException $e) {
+    error_log("Database connection failed: " . $e->getMessage());
     echo json_encode(['error' => 'Database connection failed: ' . $e->getMessage()]);
     exit;
 }
