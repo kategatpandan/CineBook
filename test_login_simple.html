@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Login Test</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h2>Simple Login Test</h2>
+    
+    <div>
+        <input type="text" id="username" value="Smith@gmail.com" placeholder="Username">
+        <input type="password" id="password" value="password123" placeholder="Password">
+        <button onclick="testLogin()">Test Login</button>
+    </div>
+    
+    <div id="result" style="margin-top: 20px; padding: 10px; border: 1px solid #ccc; background: #f9f9f9;"></div>
+    
+    <script>
+    function testLogin() {
+        const username = $('#username').val();
+        const password = $('#password').val();
+        
+        $('#result').html('Testing login...');
+        
+        $.ajax({
+            url: 'api.php?action=login',
+            type: 'POST',
+            data: JSON.stringify({
+                username: username,
+                password: password
+            }),
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function(response) {
+                $('#result').html('<pre>' + JSON.stringify(response, null, 2) + '</pre>');
+            },
+            error: function(xhr, status, error) {
+                $('#result').html(
+                    '<h3>Error:</h3>' +
+                    '<p>Status: ' + status + '</p>' +
+                    '<p>Error: ' + error + '</p>' +
+                    '<h3>Response:</h3>' +
+                    '<pre>' + xhr.responseText + '</pre>'
+                );
+            }
+        });
+    }
+    </script>
+</body>
+</html>
