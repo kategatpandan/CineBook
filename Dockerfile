@@ -1,13 +1,13 @@
 FROM php:8.2-apache
 
-# Install required extensions
-RUN docker-php-ext-install pdo_mysql mysqli
-
-# Install SSL dependencies
+# Install required extensions and SSL
 RUN apt-get update && apt-get install -y \
     openssl \
     ca-certificates \
     && update-ca-certificates
+
+# Install MySQL extensions
+RUN docker-php-ext-install pdo_mysql mysqli
 
 # Copy application files
 COPY . /var/www/html/
