@@ -15,34 +15,45 @@ try {
     $dsn = "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4";
     
     // For TiDB Cloud (requires SSL)
-    if ($host !== 'localhost' && strpos($host, 'tidbcloud.com') !== false) {
-        // TiDB Cloud specific options
-        $options = [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_EMULATE_PREPARES => false,
-            // SSL options for TiDB Cloud
-            PDO::MYSQL_ATTR_SSL_CA => null,  // Let the system use default CA
-            PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false
-        ];
-    } else {
-        // Local development - no SSL
-        $options = [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_EMULATE_PREPARES => false
-        ];
-    }
+    $options = [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES => false,
+        // SSL options for TiDB Cloud
+        PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false
+    ];
     
+    // Try to connect with SSL options
     $pdo = new PDO($dsn, $username, $password, $options);
+    
+    // Test connection
+    $pdo->query("SELECT 1");
     
     // Create tables if they don't exist
     createTables($pdo);
     
 } catch(PDOException $e) {
     error_log("Database connection failed: " . $e->getMessage());
-    echo json_encode(['error' => 'Database connection failed: ' . $e->getMessage()]);
-    exit;
+    
+    // Check if it's an SSL error
+    if (strpos($e->getMessage(), 'SSL') !== false || strpos($e->getMessage(), 'secure') !== false) {
+        // Try without SSL as fallback (for local development)
+        try {
+            $pdo = new PDO($dsn, $username, $password);
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            error_log("Connected without SSL as fallback");
+            
+            // Create tables if they don't exist
+            createTables($pdo);
+            
+        } catch(Exception $fallbackError) {
+            echo json_encode(['error' => 'Database connection failed: ' . $e->getMessage()]);
+            exit;
+        }
+    } else {
+        echo json_encode(['error' => 'Database connection failed: ' . $e->getMessage()]);
+        exit;
+    }
 }
 
 function createTables($pdo) {
