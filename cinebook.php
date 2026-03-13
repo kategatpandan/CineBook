@@ -3443,8 +3443,8 @@ function playCurrentMovieTrailer() {
         <p style="color:var(--text-secondary);margin-bottom:15px;">Login to your account</p>
         <div id="loginError" class="error-msg" style="display:none;"></div>
         <form onsubmit="handleLogin(event)">
-            <input type="text" id="loginUsername" placeholder="Username" required>
-            <input type="password" id="loginPassword" placeholder="Password" required>
+            <input type="text" id="loginUsername" placeholder="Username" value="Smith@gmail.com" required>
+            <input type="password" id="loginPassword" placeholder="Password" value="password123" required>
             <button type="submit">Login</button>
         </form>
         <p style="margin-top:15px;color:var(--text-secondary);font-size:0.9rem;">Don't have an account? <a href="#" style="color:var(--accent-primary);font-weight:600;" onclick="showScreen('signup'); return false;">Sign up</a></p>
