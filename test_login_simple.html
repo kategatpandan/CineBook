@@ -3,6 +3,13 @@
 <head>
     <title>Simple Login Test</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        input, button { padding: 8px; margin: 5px; }
+        pre { background: #f4f4f4; padding: 10px; }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
 </head>
 <body>
     <h2>Simple Login Test</h2>
@@ -11,16 +18,17 @@
         <input type="text" id="username" value="Smith@gmail.com" placeholder="Username">
         <input type="password" id="password" value="password123" placeholder="Password">
         <button onclick="testLogin()">Test Login</button>
+        <button onclick="testConnection()">Test DB Connection</button>
     </div>
     
-    <div id="result" style="margin-top: 20px; padding: 10px; border: 1px solid #ccc; background: #f9f9f9;"></div>
+    <div id="result" style="margin-top: 20px;"></div>
     
     <script>
     function testLogin() {
         const username = $('#username').val();
         const password = $('#password').val();
         
-        $('#result').html('Testing login...');
+        $('#result').html('<p>Testing login...</p>');
         
         $.ajax({
             url: 'api.php?action=login',
@@ -32,14 +40,39 @@
             contentType: 'application/json',
             dataType: 'json',
             success: function(response) {
-                $('#result').html('<pre>' + JSON.stringify(response, null, 2) + '</pre>');
+                let html = '<h3>Response:</h3><pre>' + JSON.stringify(response, null, 2) + '</pre>';
+                if (response.success) {
+                    html = '<h3 class="success">✅ Login Successful!</h3>' + html;
+                } else {
+                    html = '<h3 class="error">❌ Login Failed</h3>' + html;
+                }
+                $('#result').html(html);
             },
             error: function(xhr, status, error) {
                 $('#result').html(
-                    '<h3>Error:</h3>' +
+                    '<h3 class="error">❌ Error</h3>' +
                     '<p>Status: ' + status + '</p>' +
                     '<p>Error: ' + error + '</p>' +
-                    '<h3>Response:</h3>' +
+                    '<pre>' + xhr.responseText + '</pre>'
+                );
+            }
+        });
+    }
+    
+    function testConnection() {
+        $('#result').html('<p>Testing database connection...</p>');
+        
+        $.ajax({
+            url: 'test_db.php',
+            type: 'GET',
+            success: function(response) {
+                $('#result').html('<pre>' + response + '</pre>');
+            },
+            error: function(xhr, status, error) {
+                $('#result').html(
+                    '<h3 class="error">❌ Error</h3>' +
+                    '<p>Status: ' + status + '</p>' +
+                    '<p>Error: ' + error + '</p>' +
                     '<pre>' + xhr.responseText + '</pre>'
                 );
             }
